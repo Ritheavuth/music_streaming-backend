@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
       const data = await album.find(options);
     
       if (data) {
-        return res.status(200).send({albums: data});
+        return res.status(200).send({data: data});
       } else {
         return res.status(400).send({ success: false, msg: "No Albums found" });
       }

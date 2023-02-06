@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
   const data = await song.find(options);
 
   if (data) {
-    return res.status(200).send(data);
+    return res.status(200).send({data: data});
   } else {
     return res.status(400).send({ success: false, msg: "No Songs found" });
   }

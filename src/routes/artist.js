@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
   const data = await artist.find(options);
 
   if (data) {
-    return res.status(200).send({artists: data});
+    return res.status(200).send({data: data});
   } else {
     return res.status(400).send({ success: false, msg: "No Artists" });
   }
