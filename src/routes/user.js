@@ -6,27 +6,23 @@ const admin = require("../../config/firebase.config");
 
 router.get("/login", async (req, res) => {
   if (!req.headers.authorization) {
-    res.status.send({ message: "Invalid Token" });
+    return res.status(500).send({ message: "Invalid Token" });
   }
-
   const token = req.headers.authorization.split(" ")[1];
-
-  // validte token
   try {
     const decodeValue = await admin.auth().verifyIdToken(token);
     if (!decodeValue) {
-      return res.status(505).json({ message: "Unauthorized access" });
+      return res.status(500).json({ message: "Un Authorize" });
+    }
+    // checking user email already exists or not
+    const userExists = await user.findOne({ user_id: decodeValue.user_id });
+    if (!userExists) {
+      newUserData(decodeValue, req, res);
     } else {
-      // Check if user exists or not
-      const userExist = await user.findOne({ userId: decodeValue.user_Id });
-      if (!userExist) {
-        newUserData(decodeValue, req, res);
-      } else {
-        updateNewUserData(decodeValue, req, res);
-      }
+      updateUserData(decodeValue, req, res);
     }
   } catch (error) {
-    return res.status(505).json({ message: error });
+    return res.status(500).json({ message: error });
   }
 });
 
@@ -49,7 +45,7 @@ const newUserData = async (decodeValue, req, res) => {
   }
 };
 
-const updateNewUserData = async (decodeValue, req, res) => {
+const updateUserData = async (decodeValue, req, res) => {
   const filter = { user_id: decodeValue.user_id };
   const options = {
     upsert: true,
@@ -64,7 +60,7 @@ const updateNewUserData = async (decodeValue, req, res) => {
     );
     res.status(200).send({ user: result });
   } catch (error) {
-    res.status(400).send({success: false, message: error})
+    res.status(400).send({ success: false, message: error });
   }
 };
 
@@ -78,9 +74,35 @@ router.get("/", async (req, res) => {
   const data = await user.find(options);
 
   if (data) {
-    return res.status(200).send({data: data});
+    return res.status(200).send({ data: data });
   } else {
     return res.status(400).send({ success: false, msg: "No Users found" });
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  const filter = { _id: req.params.id };
+
+  const role = req.body.data.role;
+
+  try {
+    const result = await user.findOneAndUpdate(filter, {
+      role: role,
+    });
+    return res.status(200).send({ success: true, data: result });
+  } catch (error) {
+    return res.status(400).send({ success: false, msg: error });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  const filter = { _id: req.params.id };
+
+  const result = await user.deleteOne(filter);
+  if (result) {
+    return res.status(200).send({ success: true, msg: "User deleted" });
+  } else {
+    return res.status(400).send({ success: false, msg: "User not found" });
   }
 });
 
