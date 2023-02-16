@@ -7,13 +7,14 @@ const userRoute = require("./src/routes/user");
 const albumRoute = require("./src/routes/album");
 const songRoute = require("./src/routes/song");
 const artistRoute = require("./src/routes/artist");
+const playlistRoute = require("./src/routes/playlist");
 
 const app = express();
 
 connect();
 
 app.use(cors({ origin: true }));
-app.use(express.json())
+app.use(express.json());
 
 app.get("/", (req, res) => {
   return res.json("Hello");
@@ -30,5 +31,8 @@ app.use("/api/song", songRoute);
 
 // Artist Routes
 app.use("/api/artist", artistRoute);
+
+// Playlist Routes
+app.use("/api/playlist", playlistRoute);
 
 app.listen(4000, () => console.log("Listening to port 4000..."));

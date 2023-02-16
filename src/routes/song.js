@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const filter = { _id: req.params.id };
 
-  const data = await artist.findOne(filter);
+  const data = await song.findOne(filter);
 
   if (data) {
     return res.status(200).send({ success: true, artist: data });

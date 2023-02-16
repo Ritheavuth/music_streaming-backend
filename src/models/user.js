@@ -30,8 +30,16 @@ const UserSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    playlists: {
+      type: Array,
+      default: [],
+    },
+    likedSongs: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("user", UserSchema)
+module.exports = mongoose.model("user", UserSchema);
