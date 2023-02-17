@@ -18,8 +18,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
-  const filter = { _id: req.params.id };
+router.get("/:name", async (req, res) => {
+  const filter = { name: req.params.name };
 
   const data = await playlist.findOne(filter);
 
