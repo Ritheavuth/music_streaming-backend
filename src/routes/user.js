@@ -83,9 +83,9 @@ router.get("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const filter = { _id: req.params.id };
 
-  const likedSongs = req.body.likedSongs;
-  const playlists = req.body.playlists;
-  const role = req.body.role;
+  const likedSongs = req.body.data.likedSongs;
+  const playlists = req.body.data.playlists;
+  const role = req.body.data.role;
 
   try {
     const result = await user.findOneAndUpdate(filter, {
